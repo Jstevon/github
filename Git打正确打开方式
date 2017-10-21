@@ -1,0 +1,59 @@
+1.每一次新加入文件都要用git add "文件名"来添加入库。如果有后缀要加后缀，回车后无提示代表ok。
+2.通过git commit -m “修改了什么”来记录你怎么修改了文件，中间是你自己写，像一个小记事本一样。
+3.要会用git status 来查看是否有文件处于未提交状态。通过git diff 可以查看文件具体修改情况。
+4.在git add 还在工作区，可以用git checkout -- file来撤销，如果已经add了，用git reset HEAD file撤销回工作区，再用git checkout 撤销。
+5.利用 $rm 文件名  可以删除文件。但在版本库中没有删除（前提是你已经commit过了）。如果想恢复，可以先 $git status 然后用 $git checkout -- 文件名 恢复。如果要彻底删除，则需
+ $git rm 文件名 
+ $git commit -m “remove 文件名” 
+彻底删除。
+
+6.配置该死的SSH Keys！！！！
+1）检查是否已有SSH Key
+$cd ~/.ssh
+如果没有，需要生成一个新的SSH
+$ ssh-keygen -t rsa -C "your email"
+之后输入密码生成一个。ssh打目录，一般在home/.ssh里（这个文件是隐藏文件找不到打）
+找到id_rsa.pub 用记事本打开，复制。
+放到 github 中的SSH Key 中。新建一个，title要用ssh开头，中间要用-连接。
+内容中要有ssh-rsa（开头），如果没有自己添加。
+
+
+###################################
+###################################
+
+ssh-rsa
+AAAAB3NzaC1yc2EAAAADAQABAAABAQCaqbHRjp3YS81OdnJ0dXtmaukAOK739i++JU8XmDua8s1gFAnoDX2onABKj45zz13irA6yhYMlSquF2yF6/mVKTWjGA14D3nWcOmApk/BNqCUYejc5KC9wNHbpe2Fs/jz8FnRr/W+lj8ELI5mayLNkmOL4y1LYtuFrt5oG4GRVAKuAPFVaedg2ZXDW2Q7bLveI7Oo16e+MystrUANnes0eMd62kdlrxY9fVED5Dh/DPpDEUukKpPdi6ZTjuBmAWNk5KaSXO3AAjKc+4l7shsXxUXM44KTsnh4+tuarXYWwDKZnJexwUvQk5dKX+3DMJxdRWnhhnlrIffA1WnvA1hHv 568712151@qq.com
+
+####################################
+####################################
+
+
+正常应该是这样。
+测试：在~/.ssh 目录终端进行。
+输入 $ssh -T git@github.com
+一般情况是依然存在permission denied。 这时需要输入
+$ eval "$(ssh-agent -s)"
+ssh-add
+就可以了。重新输入$ssh -T git@github.com
+会让你输入密码，完成后会显示你的GItHub 上账户名称。然后在终端里输入：
+git config --global user.name"username"
+git config --global user.email"email"
+你以为可以使用库了吗？不存在的
+需要在你所在的库目录下输入
+$ git push origin master
+如果还存在permission denied 问题继续输入下面的：
+$ eval "$(ssh-agent -s)"
+ssh-add
+检查一下，还不行，需要先
+git pull master
+然后再push即可。
+
+PS：经过尝试，每次都要加
+$ eval "$(ssh-agent -s)"
+ssh-add
+
+
+
+
+如果还有问题参考文件（github 常见操作和常见问题）
+
